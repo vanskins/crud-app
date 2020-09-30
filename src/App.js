@@ -1,48 +1,48 @@
-import React, { useState } from "react";
-import { Table, Container, Button } from "react-bootstrap";
-
-function App() {
-  const [data, setData] = useState([
-    {
-      id: 1,
-      firstName: "Van",
-      lastName: "Alfred",
-      username: "vanskins",
-    },
-    {
-      id: 2,
-      firstName: "John",
-      lastName: "Doe",
-      username: "jdoe",
-    },
-    {
-      id: 3,
-      firstName: "Jane",
-      lastName: "Smith",
-      username: "jsmith21",
-    },
-    {
-      id: 4,
-      firstName: "Juan",
-      lastName: "Dela cruz",
-      username: "jcruzin",
-    },
-    {
-      id: 5,
-      firstName: "Pedro",
-      lastName: "Penduko",
-      username: "peds32",
-    },
-  ]);
+import React from "react";
+import { Table, Container, Button, Form } from "react-bootstrap";
+import { connect } from "react-redux";
+import { useForm } from "react-hook-form";
+import { v4 as uuidv4 } from 'uuid';
+const App = (props) => {
+  const { register, handleSubmit } = useForm();
+  
+  const onSubmit = data => {
+    const { dispatch } = props;
+    const payload = {
+      id: uuidv4(),
+      firstName: data.firstName,
+      lastName: data.lastName,
+      username: data.username,
+    }
+    dispatch({
+      type: "user/ADD_USER",
+      payload,
+    });
+    console.log(props)
+  };
   return (
     <div className="App">
       <Container>
         <div style={{ margin: "10px" }}>
-          <h1>User table</h1>
-          <div>
-            <Button variant="success">Create new user</Button>
-          </div>
+          <Form onSubmit={handleSubmit(onSubmit)}>
+            <Form.Group controlId="formGroupEmail">
+              <Form.Label>First name</Form.Label>
+              <Form.Control name="firstName" ref={register({ required: true })} type="text" placeholder="Enter first name" />
+            </Form.Group>
+            <Form.Group controlId="formGroupPassword">
+              <Form.Label>Last name</Form.Label>
+              <Form.Control name="lastName" ref={register({ required: true })} type="text" placeholder="Enter last name" />
+            </Form.Group>
+            <Form.Group controlId="formGroupPassword">
+              <Form.Label>Username</Form.Label>
+              <Form.Control name="username" ref={register({ required: true })} type="text" placeholder="Enter last name" />
+            </Form.Group>
+            <Button type="submit" variant="success">
+              Create new user
+            </Button>
+          </Form>
         </div>
+        <h3>User table</h3>
         <Table striped bordered hover>
           <thead>
             <tr>
@@ -54,8 +54,8 @@ function App() {
             </tr>
           </thead>
           <tbody>
-            {data.map((item, key) => (
-              <tr>
+            {props.users.users.map((item, key) => (
+              <tr key={key}>
                 <td>{key + 1}</td>
                 <td>{item.firstName}</td>
                 <td>{item.lastName}</td>
@@ -74,6 +74,6 @@ function App() {
       </Container>
     </div>
   );
-}
+};
 
-export default App;
+export default connect(({ users }) => ({ users }))(App);
