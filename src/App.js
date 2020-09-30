@@ -2,23 +2,30 @@ import React from "react";
 import { Table, Container, Button, Form } from "react-bootstrap";
 import { connect } from "react-redux";
 import { useForm } from "react-hook-form";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 const App = (props) => {
   const { register, handleSubmit } = useForm();
-  
-  const onSubmit = data => {
+
+  const onSubmit = (data) => {
     const { dispatch } = props;
     const payload = {
       id: uuidv4(),
       firstName: data.firstName,
       lastName: data.lastName,
       username: data.username,
-    }
+    };
     dispatch({
       type: "user/ADD_USER",
       payload,
     });
-    console.log(props)
+  };
+  const onDelete = (id) => {
+    console.log(id)
+    const { dispatch } = props;
+    dispatch({
+      type: "user/DELETE_USER",
+      payload: id,
+    });
   };
   return (
     <div className="App">
@@ -27,15 +34,30 @@ const App = (props) => {
           <Form onSubmit={handleSubmit(onSubmit)}>
             <Form.Group controlId="formGroupEmail">
               <Form.Label>First name</Form.Label>
-              <Form.Control name="firstName" ref={register({ required: true })} type="text" placeholder="Enter first name" />
+              <Form.Control
+                name="firstName"
+                ref={register({ required: true })}
+                type="text"
+                placeholder="Enter first name"
+              />
             </Form.Group>
             <Form.Group controlId="formGroupPassword">
               <Form.Label>Last name</Form.Label>
-              <Form.Control name="lastName" ref={register({ required: true })} type="text" placeholder="Enter last name" />
+              <Form.Control
+                name="lastName"
+                ref={register({ required: true })}
+                type="text"
+                placeholder="Enter last name"
+              />
             </Form.Group>
             <Form.Group controlId="formGroupPassword">
               <Form.Label>Username</Form.Label>
-              <Form.Control name="username" ref={register({ required: true })} type="text" placeholder="Enter last name" />
+              <Form.Control
+                name="username"
+                ref={register({ required: true })}
+                type="text"
+                placeholder="Enter last name"
+              />
             </Form.Group>
             <Button type="submit" variant="success">
               Create new user
@@ -63,9 +85,11 @@ const App = (props) => {
                   <a href="#">@{item.username}</a>
                 </td>
                 <td>
-                  <Button variant="primary">View</Button>{" "}
+                  <Button variant="primary">
+                    View
+                  </Button>{" "}
                   <Button variant="warning">Update</Button>{" "}
-                  <Button variant="danger">Delete</Button>
+                  <Button onClick={() => onDelete(item.id)} variant="danger">Delete</Button>
                 </td>
               </tr>
             ))}

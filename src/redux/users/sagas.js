@@ -8,6 +8,9 @@ export function* ADD_USER({ payload }) {
   });
 }
 
+
 export default function* rootSaga() {
-  yield all([takeEvery(actions.ADD_USER, ADD_USER)]);
+  yield all([
+    takeEvery(actions.ADD_USER, ADD_USER),
+  ]);
 }
